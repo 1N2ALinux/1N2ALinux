@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Script Code 1N2ALinux</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+        /* Variabel warna */
+        :root {
+            --primary-color: #0d47a1;
+            --secondary-color: #1976d2;
+            --accent-color: #ffeb3b;
+            --dark-bg: #1a237e;
+            --dark-text: #ffffff;
+            --light-bg: #ffffff;
+            --light-text: #263238;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1000;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 15px;
+        }
+        .logo img {
+            width: 100%;
+            height: 100%;
+        }
+        .logo-text {
+            font-size: 28px;
+            color: var(--dark-text);
+            font-weight: 700;
+        }
+        .menu-toggle {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .menu-toggle button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 24px;
+            width: 30px;
+            padding: 5px;
+            outline: none;
+            z-index: 1001;
+        }
+        .menu-toggle button span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            background-color: var(--dark-text);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .menu-toggle button.open span:nth-child(1) {
+            transform: rotate(45deg) translate(2px, 2px);
+            background-color: var(--accent-color);
+        }
+        .menu-toggle button.open span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-toggle button.open span:nth-child(3) {
+            transform: rotate(-45deg) translate(3px, -3px);
+            background-color: var(--accent-color);
+        }
+        .menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 200px;
+            background-color: var(--light-bg);
+            border-left: 1px solid var(--secondary-color);
+            box-shadow: -2px 0 4px rgba(0, 0, 0, 0.3);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            padding-top: 60px;
+            overflow-y: auto;
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .menu.open {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        .menu a {
+            color: var(--light-text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .menu a:hover {
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+        }
+        .menu a i {
+            margin-right: 15px;
+            font-size: 24px;
+        }
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            background-color: var(--dark-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            margin: 20px;
+        }
+        .image-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .image-container {
+            background-color: var(--light-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            transition: transform 0.3s ease;
+            max-width: 600px;
+            margin-bottom: 20px;
+        }
+        .image-container:hover {
+            transform: translateY(-5px);
+        }
+        .image-container img {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+        .image-container img:hover {
+            transform: scale(1.02);
+        }
+        .image-container h2 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .image-container p {
+            margin-top: 10px;
+            color: var(--light-text);
+            font-size: 18px;
+        }
+        .image-container a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Overlay untuk menutup menu saat klik di luar menu */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo-container" id="homeButton">
+            <div class="logo">
+                <img src="ini.jpg" alt="Logo">
+            </div>
+            <div class="logo-text">Script Code</div>
+        </div>
+        <div class="menu-toggle">
+            <button id="menuButton">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="menu" id="menu">
+                <a href="Home.html"><i class="fas fa-home"></i> Home</a>
+                <a href="Logo.html"><i class="fas fa-cogs"></i> Logo</a>
+                <a href="Portfolio.html"><i class="fas fa-briefcase"></i> Portfolio</a>
+                <a href="About.html"><i class="fas fa-info-circle"></i> About</a>
+                <a href="Contact.html"><i class="fas fa-envelope"></i> Contact</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="image-column">
+            <div class="image-container">
+                <h2>Welcome to Project Owl</h2>
+                <img src="ini.jpg" alt="Project Image">
+                <p>Discover more about our projects and innovations. <a href="#">Learn more</a></p>
+            </div>
+            <div class="image-container">
+                <h2>Project Overview</h2>
+                <img src="ini.jpg" alt="Project Overview">
+                <p>Explore the details of our latest project. <a href="#">Learn more</a></p>
+            </div>
+            <div class="image-container">
+                <h2>Technology Showcase</h2>
+                <img src="ini.jpg" alt="Technology Showcase">
+                <p>See how we integrate cutting-edge technology. <a href="#">Learn more</a></p>
+            </div>
+            <div class="image-container">
+                <h2>Our Team</h2>
+                <img src="ini.jpg" alt="Our Team">
+                <p>Meet the passionate individuals behind Project Owl. <a href="#">Learn more</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay untuk menutup menu saat klik di luar menu -->
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        var menuButton = document.getElementById('menuButton');
+        var menu = document.getElementById('menu');
+        var overlay = document.getElementById('overlay');
+
+        menuButton.addEventListener('click', function() {
+            menu.classList.toggle('open');
+            overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
+        });
+
+        overlay.addEventListener('click', function() {
+            menu.classList.remove('open');
+            overlay.style.display = 'none';
+        });
+
+        document.getElementById('homeButton').onclick = function() {
+            window.location.href = 'Profil.html'; // Ganti 'YourNewPage.html' dengan URL halaman tujuan Anda
+        };
+    </script>
+</body>
+</html>
